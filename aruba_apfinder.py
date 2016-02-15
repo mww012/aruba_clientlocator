@@ -5,7 +5,7 @@ This script is intended to be used in an Aruba Networks wireless environment.
 import argparse
 import netaddr
 import sys
-import threading
+import multiprocessing
 
 
 def ipv4(string):
@@ -59,7 +59,7 @@ def main():
     controllers = aruba_ssh.enum_controllers(arguments.master, arguments.user,
                                arguments.password, arguments.enable)
     for controller in controllers:
-        print controller
+        aruba_ssh.ssh_session(controller, arguments.user, arguments.password)
 
-if __name__=="__main__":
+if __name__ == "__main__":
     sys.exit(main())

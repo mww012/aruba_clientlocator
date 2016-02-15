@@ -34,3 +34,7 @@ def connect_ssh(ip, user, pw):
     conn.connect(ip, 22, user, pw)
     return conn
 
+
+def ssh_session(ip, user, pw):
+    print ip, user
+
