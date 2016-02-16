@@ -71,8 +71,9 @@ def main():
                                                     queues[controller]),
                                               name=str(controller))
         ssh_session.start()
-    queues[controllers[0]].put('test for master')
-    queues[controllers[1]].put('test for local1')
+    queues[controllers[0]].put('show hostname\n')
+    queues[controllers[1]].put('show hostname\n')
+
 
     for queue in queues:
         queues[queue].put('close')
