@@ -6,6 +6,7 @@ import argparse
 import netaddr
 import sys
 import multiprocessing
+import aruba_ssh
 
 
 def ipv4(string):
@@ -55,11 +56,29 @@ def main():
 
     arguments = parser.parse_args()
     print arguments
-    import aruba_ssh
-    controllers = aruba_ssh.enum_controllers(arguments.master, arguments.user,
-                               arguments.password, arguments.enable)
+    controllers = aruba_ssh.enum_controllers(arguments.master,
+                                             arguments.user,
+                                             arguments.password,
+                                             arguments.enable)
+    queues = {}
     for controller in controllers:
-        aruba_ssh.ssh_session(controller, arguments.user, arguments.password)
+        queues[controller] = multiprocessing.Queue()
+        ssh_session = multiprocessing.Process(target=aruba_ssh.ssh_session,
+                                              args=(controller,
+                                                    arguments.user,
+                                                    arguments.password,
+                                                    arguments.enable,
+                                                    queues[controller]),
+                                              name=str(controller))
+        ssh_session.start()
+    queues[controllers[0]].put('test for master')
+    queues[controllers[1]].put('test for local1')
+
+    for queue in queues:
+        queues[queue].put('close')
+
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
