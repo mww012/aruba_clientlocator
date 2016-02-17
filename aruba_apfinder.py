@@ -56,10 +56,12 @@ def main():
 
     arguments = parser.parse_args()
     print arguments
-    controllers = aruba_ssh.enum_controllers(arguments.master,
-                                             arguments.user,
-                                             arguments.password,
-                                             arguments.enable)
+    # controllers = aruba_ssh.enum_controllers(arguments.master,
+    #                                          arguments.user,
+    #                                          arguments.password,
+    #                                          arguments.enable)
+    controllers=['10.1.200.242']
+
     queues = {}
     for controller in controllers:
         queues[controller] = multiprocessing.Queue()
@@ -71,8 +73,7 @@ def main():
                                                     queues[controller]),
                                               name=str(controller))
         ssh_session.start()
-    queues[controllers[0]].put('show hostname\n')
-    queues[controllers[1]].put('show hostname\n')
+    queues[controllers[0]].put('show ap database\n')
 
 
     for queue in queues:

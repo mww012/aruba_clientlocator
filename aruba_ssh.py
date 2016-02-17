@@ -37,6 +37,7 @@ def connect_ssh(ip, user, pw):
 def ssh_session(ip, user, pw, enpw, q):
     result = q.get()
     name = multiprocessing.current_process().name
+    output = ''
     conn = connect_ssh(ip, user, pw)
     sh = conn.invoke_shell()
     time.sleep(0.5)
@@ -48,17 +49,23 @@ def ssh_session(ip, user, pw, enpw, q):
     sh.send('\n')
     time.sleep(0.5)
 
+    # disable output paging
+    sh.send('no paging\n')
+    time.sleep(0.5)
+
     while sh.recv_ready():
-        sh.recv(1024)
+        print sh.recv(1024)
+
+    print "\n---starting commands---\n"
 
     while result != 'close':
-        print result, "command sent by", name
         sh.send(result)
-        time.sleep(0.5)
+        time.sleep(2)
         while sh.recv_ready():
-            print sh.recv(1024)
+            output += sh.recv(2048)
+            time.sleep(0.5)
         result = q.get()
         time.sleep(2)
 
-    print "Caught close ", name
+    print "Caught close", name
     conn.close()
