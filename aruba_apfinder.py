@@ -62,22 +62,46 @@ def main():
     #                                          arguments.enable)
     controllers=['10.1.200.242']
 
-    queues = {}
+    send_pipes = {}
+    recv_pipes = {}
+    pipes = {}
+    sessions = {}
+    result = {}
+    mgr = multiprocessing.Manager()
+
+    controller={}
+    pool = multiprocessing.Pool(processes=len(controllers))
     for controller in controllers:
-        queues[controller] = multiprocessing.Queue()
-        ssh_session = multiprocessing.Process(target=aruba_ssh.ssh_session,
-                                              args=(controller,
-                                                    arguments.user,
-                                                    arguments.password,
-                                                    arguments.enable,
-                                                    queues[controller]),
-                                              name=str(controller))
-        ssh_session.start()
-    queues[controllers[0]].put('show ap database\n')
+        pipe = multiprocessing.Pipe()
+        sessions[controller] = pool.apply_async(target=aruba_ssh.ssh_session,
+                                                args=(controller,
+                                                      arguments.user,
+                                                      arguments.password,
+                                                      arguments.enable,
+                                                      pipe[controller],
+                                                      result[controller]),
+                                                name=str(controller))
+
+    print send_pipes, recv_pipes, pipes
+    # for controller in controllers:
+        # result[controller] = mgr.list()
+        # ssh_session = multiprocessing.Process(target=aruba_ssh.ssh_session,
+        #                                       args=(controller,
+        #                                             arguments.user,
+        #                                             arguments.password,
+        #                                             arguments.enable,
+        #                                             pipes[controller],
+        #                                             result[controller]),
+        #                                       name=str(controller))
+        # sessions[controller] = ssh_session
+        # ssh_session.start()
 
 
-    for queue in queues:
-        queues[queue].put('close')
+
+    import time
+    # while len(result[controllers[0]]) == 0:
+    #     print len(result[controllers[0]])
+    #     time.sleep(1)
 
 
 if __name__ == "__main__":
