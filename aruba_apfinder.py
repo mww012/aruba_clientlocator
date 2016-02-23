@@ -28,7 +28,7 @@ def main():
         '- Notify user of the current associated AP via the Pushover '
         'notification service\n'
         '- Blink the lights on the currently associated AP\n'
-        '- Write the AP associations a times to a log file'),
+        '- Write the AP associations and times to a log file'),
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('-m',
