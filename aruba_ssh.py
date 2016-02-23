@@ -27,6 +27,7 @@ def enum_controllers(master, user, pw, enpw):
     conn.close()
     return controllers
 
+
 def connect_ssh(ip, user, pw):
     conn = paramiko.SSHClient()
     conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -35,7 +36,6 @@ def connect_ssh(ip, user, pw):
 
 
 def ssh_session(ip, user, pw, enpw, p, result):
-
     name = multiprocessing.current_process().name
     output = ''
     conn = connect_ssh(ip, user, pw)
@@ -54,11 +54,7 @@ def ssh_session(ip, user, pw, enpw, p, result):
     time.sleep(0.5)
 
     while sh.recv_ready():
-        sh.recv(1024)
-
-    print "\n---starting commands---\n"
-
-    return 'pipe test'
-
-    print "Caught close for ", name
+        output += sh.recv(1024)
+        time.sleep(2)
+    return output
     conn.close()
