@@ -83,7 +83,6 @@ def main():
 
     # Parse argumnets in the "arguments" array
     arguments = parser.parse_args()
-
     # If pushover argument exists, the appkey and usertoken must exist.
     if arguments.pushover:
         if (arguments.pushtoken is None or arguments.pushkey is None):
@@ -107,7 +106,7 @@ def main():
                             '(?P<authmode>[\w\.]*)\s*'
                             '(?P<apname>[\w\-]*)\s*'
                             '(?P<connectiontype>[\w]*)\s*'
-                            '(?P<essid>[\w]*)\s*'
+                            '(?P<essid>[\w-]*)\s*'
                             '(?P<bssid>[A-Fa-f0-9\:]{17})\s*'
                             '(?P<connectionmode>[\w\-]*)\s*'
                             '(?P<aaaprofile>[\w\-]*)\s*'
@@ -152,7 +151,6 @@ def main():
             print 'Client not found...'
             current_loc['online'] = False
         time.sleep(1)
-        print current_loc
 
 
 if __name__ == "__main__":
