@@ -1,4 +1,4 @@
-# Aruba AP Finder
+# Aruba Client Locator
 
 This script is intended to help the user find APs as well as help troubleshoot client roaming.
 
