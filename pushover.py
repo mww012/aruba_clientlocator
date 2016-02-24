@@ -6,7 +6,9 @@ class pushover_connection:
         self.userkey = userkey
 
     def send_message(self,message):
+        # Create https connection to Pushover
         conn = httplib.HTTPSConnection("api.pushover.net:443")
+        # Send message to Pushover
         conn.request("POST","/1/messages.json",
                      urllib.urlencode({
                          'token': self.apptoken,
