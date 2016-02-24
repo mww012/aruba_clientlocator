@@ -1,6 +1,6 @@
 # Aruba Client Locator
 
-This script is intended to help the user find APs as well as help troubleshoot client roaming.
+This script is intended to help the user find a client and the AP it's associated to as well as help troubleshoot client roaming.
 
 This python script will do at least one of the following for a given sta:
 * Notify user of the current associated AP via the Pushover notification service
